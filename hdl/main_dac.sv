@@ -1,7 +1,7 @@
 module main_dac #(
 
     parameter CLK_HZ = 60_000_000,
-    parameter int OSR = 1024, // OSR
+    parameter int OSR = 1024, // OSR - oversampling rate
     parameter int CIC = 2, //CIC comb and integrator stages
     parameter int BITLEN = 16)
 
@@ -93,9 +93,8 @@ module main_dac #(
 
     sigdel_dac #(.BITLEN(BITLEN)) 
         dac_main(
-        .clk(clk),
+        .clk(CLK_HZ),
         .rst(rst),
-        .ena(ena)
         .in_DAC(in_DAC), 
         .out(out)
     );

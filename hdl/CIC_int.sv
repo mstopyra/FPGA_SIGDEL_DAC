@@ -1,6 +1,6 @@
 // Implementation of a single integrator stage of a CIC interpolation filter
 
-module CIC_int(parameter int BITWIDTH = 32)(
+module CIC_int#(parameter int BITWIDTH = 32)(
     clk, rst, ena, in, out);
 
     input logic clk, rst, ena; 

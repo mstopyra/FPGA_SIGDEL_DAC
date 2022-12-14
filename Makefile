@@ -7,15 +7,15 @@ VVP_POST=-fst
 VIVADO=vivado -mode batch -source
 
 
-CONWAY_SRCS=hdl/conway_cell.sv hdl/adder_1.sv hdl/adder_n.sv
-DECODER_SRCS=hdl/decoder*.sv
-LED_ARRAY_SRCS=${DECODER_SRCS} hdl/led_array_driver.sv
-MAIN_SRCS=${CONWAY_SRCS} ${LED_ARRAY_SRCS} hdl/main.sv 
+CIC_SRCS=hdl/CIC_comb.sv hdl/CIC_int.sv
+FIR_SRCS=hdl/FIR_filter.sv 
+DAC_SRC=hdl/sigdel_DAC.sv
+MAIN_SRCS=${CIC_SRCS} ${FIR_SRCS} ${DAC_SRC} hdl/main_dac.sv hdl/pulse_generator.sv
 
 # Look up .PHONY rules for Makefiles
 .PHONY: clean submission remove_solutions
 
-test_main: tests/test_main.sv tests/led_array_model.sv ${MAIN_SRCS}
+test_main: tests/test_main.sv ${MAIN_SRCS}
 	@echo "This might take a while, we're testing a lot of clock cycles!"
 	${IVERILOG} $^ -o test_main.bin && ${VVP} test_main.bin ${VVP_POST}
 
