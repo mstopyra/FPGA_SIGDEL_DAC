@@ -8,9 +8,9 @@ VIVADO=vivado -mode batch -source
 
 
 CIC_SRCS=hdl/CIC_comb.sv hdl/CIC_int.sv
-FIR_SRCS=hdl/FIR_filter.sv 
+FIR_SRCS=hdl/fir.sv hdl/register.sv
 DAC_SRC=hdl/sigdel_DAC.sv
-MAIN_SRCS=${CIC_SRCS} ${FIR_SRCS} ${DAC_SRC} hdl/main_dac.sv hdl/pulse_generator.sv
+MAIN_SRCS=${CIC_SRCS} ${FIR_SRCS} ${DAC_SRC} hdl/main_dac.sv hdl/pulse_generator.sv hdl/sinegen.sv
 
 # Look up .PHONY rules for Makefiles
 .PHONY: clean submission remove_solutions

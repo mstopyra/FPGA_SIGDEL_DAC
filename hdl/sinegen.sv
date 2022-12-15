@@ -10,7 +10,7 @@ module sinegen (clk, sin);
     int i; 
 
     initial begin
-        $readmemh("sine.mem", rom_memory);
+        $readmemh("sinwave.mem", rom_sample);
         i=0;
     end
 
