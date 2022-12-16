@@ -3,20 +3,25 @@
 
 module main_dac #(
 
-    parameter CLK_HZ = 60_000_000,
-    parameter SYS_CLK_PERIOD_NS = (1_000_000_000/SYS_CLK_HZ),
-    parameter int OSR = 1024, // OSR - oversampling rate
+    parameter CLK_HZ = 10_000_000,
+    parameter SYS_CLK_PERIOD_NS = (1_000_000_000/CLK_HZ),
+    parameter int OSR = 256, // OSR - oversampling rate
     parameter int CIC = 2, //CIC comb and integrator stages
-    parameter int BITLEN = 16)
+    parameter int BITLEN = 16
+    )
 
-    (clk, sysclk rst, ena, in_DAC, in, out);
+    (sysclk, in, out, buttons);
 
-    //localparam CLK_CIC = ___;
-    input wire in; 
+    input wire [1:0] buttons;
+    input logic [BITLEN-1:0] in; 
+    logic clk;
+    input logic sysclk;
+    output out;
+    logic rst; 
     wire [BITLEN-1:0] in_DAC;
-    input wire clk, rst;
-    input sysclk;
-    output bit out;
+
+    //Setting reset button on fpga - designated in main.xdc
+    always_comb rst = buttons[0];
 
     `ifdef SIMULATION
     assign clk = sysclk;
@@ -27,7 +32,7 @@ module main_dac #(
       .BANDWIDTH("OPTIMIZED"),
       .CLKFBOUT_MULT_F(64.0), //2.0 to 64.0 in increments of 0.125
       .CLKIN1_PERIOD(SYS_CLK_PERIOD_NS),
-      .CLKOUT0_DIVIDE_F(12.5), // Divide amount for CLKOUT0 (1.000-128.000).
+      .CLKOUT0_DIVIDE_F(20), // Divide amount for CLKOUT0 (1.000-128.000).
       .DIVCLK_DIVIDE(1), // Master division value (1-106)
       .CLKOUT0_DUTY_CYCLE(0.5),.CLKOUT0_PHASE(0.0),
       .STARTUP_WAIT("FALSE") // Delays DONE until MMCM is locked (FALSE, TRUE)
@@ -51,35 +56,32 @@ module main_dac #(
     
 
     localparam int CIC_LEN = 1 + 1 + int'((CIC * $clog2(OSR)));
-    wire [BITLEN-1:0] out_sin
 
-    sinegen sinsample()
+    wire [CIC_LEN-1:0] CIC_comb_sig_0;
+    wire [CIC_LEN-1:0] CIC_int_sig_0;
+    wire [CIC_LEN-1:0] CIC_comb_sig_1;
+    wire [CIC_LEN-1:0] CIC_int_sig_1;   
+    wire [CIC_LEN-1:0] CIC_comb_sig_2;
+    wire [CIC_LEN-1:0] CIC_int_sig_2;
+
+    triangle_generator #(.N(BITLEN))wavsample(.clk(clk), .rst(rst), .ena(1'b1), .out(in));
 
     fir fircompensator(
         .clk(clk), 
         .rst(rst), 
         .ena(pulse_40kHz), 
-        .sample(out_sin), 
-        .out(0_CIC_comb_sig)
+        .sample(in), 
+        .out(CIC_comb_sig_0)
         );
-    
-    wire [CIC_LEN-1: 0] 0_CIC_comb_sig [CIC:0];
-    wire [CIC_LEN-1: 0] 0_CIC_int_sig [CIC:0];
 
-    wire [CIC_LEN-1: 0] 1_CIC_comb_sig [CIC:0];
-    wire [CIC_LEN-1: 0] 1_CIC_int_sig [CIC:0];    
-    
-    wire [CIC_LEN-1: 0] 2_CIC_comb_sig [CIC:0];
-    wire [CIC_LEN-1: 0] 2_CIC_int_sig [CIC:0];
-
-
+//CIC INTERPLATOR
     CIC_comb #(.BITWIDTH(CIC_LEN))
         comb_inst_1(
             .clk(clk),
             .rst(rst),
             .ena(pulse_40kHz), 
-            .in(0_CIC_comb_sig), 
-            .out(1_CIC_comb_sig)
+            .in(CIC_comb_sig_0), 
+            .out(CIC_comb_sig_1)
         );
 
     CIC_comb #(.BITWIDTH(CIC_LEN))
@@ -87,16 +89,16 @@ module main_dac #(
             .clk(clk),
             .rst(rst),
             .ena(pulse_40kHz), 
-            .in(1_CIC_comb_sig), 
-            .out(2_CIC_comb_sig)
+            .in(CIC_comb_sig_1), 
+            .out(CIC_comb_sig_2)
         );
     CIC_comb #(.BITWIDTH(CIC_LEN))
         comb_inst_3(
             .clk(clk),
             .rst(rst),
             .ena(pulse_40kHz), 
-            .in(2_CIC_comb_sig), 
-            .out(0_CIC_int_sig)
+            .in(CIC_comb_sig_2), 
+            .out(CIC_int_sig_0)
         );
 
     CIC_int #(.BITWIDTH(CIC_LEN))
@@ -104,8 +106,8 @@ module main_dac #(
             .clk(clk),
             .rst(rst),
             .ena(pulse_40kHz), 
-            .in(0_CIC_int_sig), 
-            .out(1_CIC_int_sig)
+            .in(CIC_int_sig_0), 
+            .out(CIC_int_sig_1)
         );
 
     CIC_int #(.BITWIDTH(CIC_LEN))
@@ -113,8 +115,8 @@ module main_dac #(
             .clk(clk),
             .rst(rst),
             .ena(pulse_40kHz), 
-            .in(1_CIC_int_sig), 
-            .out(2_CIC_int_sig)
+            .in(CIC_int_sig_1), 
+            .out(CIC_int_sig_2)
         );
 
     CIC_int #(.BITWIDTH(CIC_LEN))
@@ -122,7 +124,7 @@ module main_dac #(
             .clk(clk),
             .rst(rst),
             .ena(pulse_40kHz), 
-            .in(2_CIC_int_sig), 
+            .in(CIC_int_sig_2), 
             .out(in_DAC)
         );
     //END CIC INTERPOLATOR
@@ -135,3 +137,4 @@ module main_dac #(
         .out(out)
     );
 
+endmodule

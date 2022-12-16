@@ -24,7 +24,7 @@ module sigdel_dac #(parameter int BITLEN = 16)
 
                 add_sig <= add_sig[BITLEN-1:0] + in_DAC - (2**15);
                 out <= add_sig[BITLEN-1]; 
-
+            end
             else if(add_sig[BITLEN-1] == 1'b0) begin
                 add_sig <= add_sig[BITLEN-1:0] + in_DAC + (2**15);
                 /*Signal is integrated and looped through a flipflop to find pulse voltage levels for analog signal from 

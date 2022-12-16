@@ -1,4 +1,3 @@
-`default_nettype none
 /*
   Outputs a pulse generator with a period of "ticks".
   out should go high for one cycle ever "ticks" clocks.

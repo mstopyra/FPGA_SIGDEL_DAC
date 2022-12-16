@@ -1,25 +1,29 @@
-module sinegen (clk, sin);
+module sinegen(clk, sin, rst);
 
-    parameter SIZE = 1024; 
+    parameter SIZE = 200000; 
     parameter int BITLEN = 16;
-    input clk; 
-    output wire [BITLEN-1:0] sin;
+    input clk;
+    input rst;
+    output logic [BITLEN-1:0] sin;
 
-    wire [BITLEN-1:0] rom_memory [SIZE-1:0];
+    logic [BITLEN-1:0] rom_sample [SIZE-1:0];
 
-    int i; 
+    logic [63:0] i; 
 
     initial begin
-        $readmemh("sinwave.mem", rom_sample);
+        $readmemb("sinewave.memb", rom_sample);
         i=0;
     end
 
-    always @(posedge clk) begin
-        sin = rom_memory[i]; 
-        i = i+1;
+    always_ff @(posedge clk) begin
 
-        if (i==SIZE) begin i = 0 end;
+        sin <= rom_sample[i]; 
+        i <= i+1;
+
+    if(i == SIZE) begin 
+            i <= 0;
+        end
         
     end
-   
+
 endmodule

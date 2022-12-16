@@ -1,0 +1,28 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Dec 16 03:42:57 2022
+[*]
+[dumpfile] "/home/mstopyra/Documents/COMPARCH/FPGA_SIGDEL_DAC/main_dac.fst"
+[dumpfile_mtime] "Fri Dec 16 03:36:29 2022"
+[dumpfile_size] 68096276
+[savefile] "/home/mstopyra/Documents/COMPARCH/FPGA_SIGDEL_DAC/crappy_DAC_output.gtkw"
+[timestart] 72075000000
+[size] 1920 962
+[pos] -89 -89
+*-30.207884 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] test_main.
+[treeopen] test_main.UUT.
+[sst_width] 233
+[signals_width] 126
+[sst_expanded] 1
+[sst_vpaned_height] 261
+@18022
+test_main.in[15:0]
+@28
+test_main.out
+@8022
+test_main.UUT.wavsample.out[15:0]
+@18023
+test_main.UUT.dac_main.in_DAC[15:0]
+[pattern_trace] 1
+[pattern_trace] 0

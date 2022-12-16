@@ -1,30 +1,26 @@
-import numpy as np
-import matplotlib.pyplot as plot
+from math import sin, pi
 
-len = 1024
+NUM_SECS = 5
+SAMPLE_RATE = 40000
+SINE_FREQUENCY = 440
+AMPLITUDE = 6500
 
-f = 440
-fs = 44100
+def sine_wave(A, f, t):
+    
+    return A*sin(2*pi*f*t)
 
-t = np.arange(0, len, 1)
-sinus = np.sin((2*np.pi*f/fs)*t)*1000
+def gen_values(amplitude, secs, sampleRate, frequency):
 
-sinus = map(int, sinus)
+    with open('sinewave.memh', 'w') as memfile:
+        for i in range(0, secs * sampleRate):
+            val = int(sine_wave(amplitude, frequency, (i/sampleRate)))
+            if val >= 0:
+                bits = f'{val:016b}'
+            else:
+                reversed_val = ((2**16)+val)
+                bits = f'{reversed_val:016b}'
+            memfile.write(f'{bits},\n')
 
-sinus_mem = ',\n'.join(map(str, sinus)) 
 
-with open('sinwave.mem', 'w') as file: 
-    file.write(sinus_mem)\
-#Put these files in rom to read from and make discrete on FPGA
-
-
-
-#Plot to show generated values
-#plot.plot(t, sinus)
-#plot.title('Generated Sine wave')
-#plot.xlabel('Time')
-#plot.ylabel('Amplitude = sin(time)')
-#plot.grid(True, which='both')
-#plot.axhline(y=0)
-#plot.show()
-
+if __name__ == "__main__":
+    gen_values(AMPLITUDE, NUM_SECS, SAMPLE_RATE, SINE_FREQUENCY)
