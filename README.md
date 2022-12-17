@@ -24,4 +24,4 @@ Tests are included in the repo. To run the test, run ``make test_main`` (``test_
 **Sigma Delta Modulator:**
 <img src="images/sigma_delta.png" style="float:middle"> <br>
 
-Our FIR filter is from Ian Eykamp and Lauren Xiong’s work. (link here)
+Our FIR filter is from Ian Eykamp and Lauren Xiong’s work. https://github.com/Laurenx618/Simple-DSP
