@@ -1,0 +1,48 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Dec 16 18:31:56 2022
+[*]
+[dumpfile] "/home/shamama/Documents/GitHub/FPGA_SIGDEL_DAC/main_dac.fst"
+[dumpfile_mtime] "Fri Dec 16 17:30:53 2022"
+[dumpfile_size] 35256136
+[savefile] "/home/shamama/Documents/GitHub/FPGA_SIGDEL_DAC/crappy_DAC_output_with_Avi.gtkw"
+[timestart] 64592000000
+[size] 1658 962
+[pos] 53 -1
+*-30.207884 67310056000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] test_main.
+[treeopen] test_main.UUT.
+[sst_width] 233
+[signals_width] 223
+[sst_expanded] 1
+[sst_vpaned_height] 243
+@18022
+test_main.in[15:0]
+@28
+test_main.out
+@8022
+test_main.UUT.wavsample.out[15:0]
+@18420
+test_main.UUT.dac_main.in_DAC[15:0]
+@20000
+-
+@20400
+-
+@10420
+test_main.UUT.fircompensator.out[35:0]
+@20000
+-
+@10420
+test_main.UUT.int_inst_1.out[17:0]
+@20000
+-
+@10420
+test_main.UUT.int_inst_2.out[17:0]
+@20000
+-
+@10420
+test_main.UUT.int_inst_3.out[17:0]
+@20000
+-
+[pattern_trace] 1
+[pattern_trace] 0
